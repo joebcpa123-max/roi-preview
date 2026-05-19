@@ -154,18 +154,14 @@
   .testimonials-header .section-eyebrow { color: var(--gold); }
   .testimonials-header .section-title { color: var(--white); }
   .testimonials-header .section-title em { color: var(--gold-light); }
-  .carousel-wrap { position: relative; min-height: 320px; }
+  .carousel-wrap { position: relative; }
   .carousel-slide {
     position: absolute; top: 0; left: 0; right: 0;
     opacity: 0; transition: opacity 0.8s ease;
     pointer-events: none; text-align: center; padding: 0 40px;
   }
   .carousel-slide.active { opacity: 1; pointer-events: auto; }
-  .quote-mark {
-    font-family: 'Playfair Display', serif; font-size: 72px;
-    color: var(--gold); line-height: 0.65; display: block;
-    margin-bottom: 20px; opacity: 0.55;
-  }
+  .carousel-slide.measuring { position: relative !important; opacity: 0 !important; pointer-events: none !important; }
   .quote-text {
     font-family: 'Playfair Display', serif;
     font-size: clamp(16px, 1.85vw, 21px);
@@ -357,7 +353,6 @@
     <div class="carousel-wrap" id="testimonialCarousel">
 
       <div class="carousel-slide active">
-        <span class="quote-mark">&ldquo;</span>
         <p class="quote-text">I worked alongside Joe for three years when he served as our VP of Finance. His ability to translate complex financial data into a clear strategic narrative was unlike anything I'd seen. Any organization that earns his partnership is in exceptionally capable hands.</p>
         <div class="quote-attribution">
           <div class="quote-attr-line"></div>
@@ -367,7 +362,6 @@
       </div>
 
       <div class="carousel-slide">
-        <span class="quote-mark">&ldquo;</span>
         <p class="quote-text">Joe and I have collaborated on several transactions over the years, and his analytical rigor consistently stands out. He brings a level of strategic depth to financial work that's genuinely rare — he sees the business story behind the numbers, not just the numbers themselves.</p>
         <div class="quote-attribution">
           <div class="quote-attr-line"></div>
@@ -377,7 +371,6 @@
       </div>
 
       <div class="carousel-slide">
-        <span class="quote-mark">&ldquo;</span>
         <p class="quote-text">Joe and I spent several years working side by side building the financial infrastructure of a fast-scaling organization. I watched him handle complexity, ambiguity, and high-stakes decisions with equal composure. His financial acumen is matched only by his ability to drive alignment across a leadership team.</p>
         <div class="quote-attribution">
           <div class="quote-attr-line"></div>
@@ -387,7 +380,6 @@
       </div>
 
       <div class="carousel-slide">
-        <span class="quote-mark">&ldquo;</span>
         <p class="quote-text">I've had the pleasure of working alongside Joe on multiple transactions. His financial models are meticulous, his diligence process is thorough, and he brings a level of clarity to complex situations that makes the entire team more effective. He's exactly the person you want in the room when the stakes are high.</p>
         <div class="quote-attribution">
           <div class="quote-attr-line"></div>
@@ -397,7 +389,6 @@
       </div>
 
       <div class="carousel-slide">
-        <span class="quote-mark">&ldquo;</span>
         <p class="quote-text">Joe and I crossed paths during a pivotal period of growth, and I witnessed firsthand his ability to bring financial discipline and strategic vision to a leadership team simultaneously. His work was consistently rigorous, clear, and actionable. I would endorse him without a moment's hesitation.</p>
         <div class="quote-attribution">
           <div class="quote-attr-line"></div>
@@ -407,7 +398,6 @@
       </div>
 
       <div class="carousel-slide">
-        <span class="quote-mark">&ldquo;</span>
         <p class="quote-text">What distinguishes Joe from other financial professionals I've worked alongside is his genuine investment in the success of the organization — not just his piece of it. He doesn't just deliver analysis; he drives outcomes. His combination of technical depth and strategic thinking is something I've rarely encountered in one person.</p>
         <div class="quote-attribution">
           <div class="quote-attr-line"></div>
@@ -448,10 +438,21 @@
     dots[current].classList.add('active');
   }
 
+  function fitCarousel() {
+    var maxH = 0;
+    slides.forEach(function (s) { s.classList.add('measuring'); });
+    slides.forEach(function (s) { if (s.offsetHeight > maxH) maxH = s.offsetHeight; });
+    slides.forEach(function (s) { s.classList.remove('measuring'); });
+    carousel.style.minHeight = (maxH + 16) + 'px';
+  }
+
   function resetTimer() {
     clearInterval(timer);
     timer = setInterval(function () { goTo(current + 1); }, DELAY);
   }
+
+  fitCarousel();
+  window.addEventListener('resize', fitCarousel);
 
   carousel.addEventListener('mouseenter', function () { clearInterval(timer); });
   carousel.addEventListener('mouseleave', resetTimer);
